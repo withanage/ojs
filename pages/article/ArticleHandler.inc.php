@@ -153,9 +153,15 @@ class ArticleHandler extends Handler
         }
 
         if ($galleyId && in_array($request->getRequestedOp(), ['view', 'download'])) {
-            $galleys = (array) $this->publication->getData('galleys');
+            $galleys = Repo::articleGalley()->getMany(
+                Repo::articleGalley()
+                    ->getCollector()
+                    ->filterByPublicationIds([$this->publication->getId()])
+            );
+
+
             foreach ($galleys as $galley) {
-                if ($galley->getBestGalleyId() == $galleyId) {
+                if ($galley->getData('id') == $galleyId) {
                     $this->galley = $galley;
                     break;
 
