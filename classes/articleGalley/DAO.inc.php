@@ -13,6 +13,7 @@
 
 namespace APP\articleGalley;
 
+use APP\facades\Repo;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
@@ -87,23 +88,6 @@ class DAO extends EntityDAO
     }
 
     /**
-     * Get a collection of galleys matching the configured query
-     */
-    public function getMany(Collector $query): LazyCollection
-    {
-        $rows = $query
-            ->getQueryBuilder()
-            ->select(['g.*'])
-            ->get();
-
-        return LazyCollection::make(function () use ($rows) {
-            foreach ($rows as $row) {
-                yield $this->fromRow($row);
-            }
-        });
-    }
-
-    /**
      * Retrieve all galleys of a journal.
      *
      * @param $journalId
@@ -117,14 +101,6 @@ class DAO extends EntityDAO
             ->where('s.context_id', '= ?', (int)$journalId);
 
         return $q;
-    }
-
-    /**
-     * @copydoc EntityDAO::fromRow()
-     */
-    public function fromRow(stdClass $row): ArticleGalley
-    {
-        return parent::fromRow($row);
     }
 
     /**
@@ -149,5 +125,55 @@ class DAO extends EntityDAO
     public function delete(ArticleGalley $articleGalley)
     {
         parent::_delete($articleGalley);
+    }
+
+
+    /**
+     * Get a collection of galleys matching the configured query
+     */
+    public function getMany(Collector $query): LazyCollection
+    {
+        $rows = $query
+            ->getQueryBuilder()
+            ->select(['g.*'])
+            ->get();
+
+        return LazyCollection::make(function () use ($rows) {
+            foreach ($rows as $row) {
+                yield $this->fromRow($row);
+            }
+        });
+    }
+
+    /**
+     * @copydoc EntityDAO::fromRow()
+     */
+    public function fromRow(stdClass $row): ArticleGalley
+    {
+        return parent::fromRow($row);
+    }
+
+    /**
+     * Method exists for compatibility with the representation DAO in OMP
+     *
+     * @deprecated 3.3
+     */
+    public function getByPublicationId(int $publicationId): LazyCollection
+    {
+        return Repo::articleGalley()->getMany(
+            Repo::articleGalley()
+                ->getCollector()
+                ->filterByPublicationIds([$publicationId])
+        );
+    }
+
+    /**
+     * Method exists for compatibility with the representation DAO in OMP
+     *
+     * @deprecated 3.3
+     */
+    public function getById(int $publicationId): ?ArticleGalley
+    {
+        return $this->get($publicationId);
     }
 }

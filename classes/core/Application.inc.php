@@ -18,6 +18,7 @@
 
 namespace APP\core;
 
+use APP\facades\Repo;
 use PKP\core\PKPApplication;
 use PKP\db\DAORegistry;
 use PKP\security\Role;
