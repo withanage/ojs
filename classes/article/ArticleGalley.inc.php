@@ -23,7 +23,7 @@ use APP\facades\Repo;
 use PKP\facades\Locale;
 use PKP\submission\Representation;
 
-class ArtiqcleGalley extends Representation
+class ArticleGalley extends Representation
 {
     /** @var SubmissionFile */
     public $_submissionFile;
