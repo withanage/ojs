@@ -13,7 +13,6 @@
 
 namespace APP\submission;
 
-use APP\article\ArticleGalleyDAO;
 use APP\article\ArticleTombstoneManager;
 use APP\core\Application;
 use APP\core\Services;
@@ -21,6 +20,7 @@ use APP\facades\Repo;
 use APP\journal\JournalDAO;
 use PKP\context\Context;
 use PKP\db\DAORegistry;
+use PKP\doi\exceptions\DoiCreationException;
 
 class Repository extends \PKP\submission\Repository
 {
@@ -91,7 +91,7 @@ class Repository extends \PKP\submission\Repository
      *
      * @throws \Exception
      */
-    public function createDois(Submission $submission): void
+    public function createDois(Submission $submission): array
     {
         /** @var JournalDAO $contextDao */
         $contextDao = \DAORegistry::getDAO('JournalDAO');
@@ -100,28 +100,37 @@ class Repository extends \PKP\submission\Repository
 
         // Article
         $publication = $submission->getCurrentPublication();
+
+        $doiCreationFailures = [];
+
         if ($context->isDoiTypeEnabled(Repo::doi()::TYPE_PUBLICATION) && empty($publication->getData('doiId'))) {
-            $doiId = Repo::doi()->mintPublicationDoi($publication, $submission, $context);
-            if ($doiId !== null) {
+            try {
+                $doiId = Repo::doi()->mintPublicationDoi($publication, $submission, $context);
                 Repo::publication()->edit($publication, ['doiId' => $doiId]);
+            } catch (DoiCreationException $exception) {
+                $doiCreationFailures[] = $exception;
             }
         }
 
         // Galleys
         if ($context->isDoiTypeEnabled(Repo::doi()::TYPE_REPRESENTATION)) {
-            // For each galley
-            $galleys = Services::get('galley')->getMany(['publicationIds' => $publication->getId()]);
-            /** @var ArticleGalleyDAO $galleyDao */
-            $galleyDao = DAORegistry::getDAO('ArticleGalleyDAO');
+            $galleys = Repo::galley()->getMany(
+                Repo::galley()
+                    ->getCollector()
+                    ->filterByPublicationIds(['publicationIds' => $publication->getId()])
+            );
             foreach ($galleys as $galley) {
                 if (empty($galley->getData('doiId'))) {
-                    $doiId = Repo::doi()->mintGalleyDoi($galley, $publication, $submission, $context);
-                    if ($doiId !== null) {
-                        $galley->setData('doiId', $doiId);
-                        $galleyDao->updateObject($galley);
+                    try {
+                        $doiId = Repo::doi()->mintGalleyDoi($galley, $publication, $submission, $context);
+                        Repo::galley()->edit($galley, ['doiId' => $doiId]);
+                    } catch (DoiCreationException $exception) {
+                        $doiCreationFailures[] = $exception;
                     }
                 }
             }
         }
+
+        return $doiCreationFailures;
     }
 }

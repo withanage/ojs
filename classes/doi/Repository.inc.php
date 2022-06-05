@@ -13,18 +13,20 @@
 
 namespace APP\doi;
 
-use APP\article\ArticleGalley;
 use APP\core\Request;
-use APP\core\Services;
 use APP\facades\Repo;
 use APP\issue\Issue;
 use APP\Jobs\Doi\DepositIssue;
+use APP\journal\Journal;
 use APP\journal\JournalDAO;
 use APP\plugins\PubIdPlugin;
 use APP\publication\Publication;
 use APP\submission\Submission;
 use PKP\context\Context;
 use PKP\core\DataObject;
+use PKP\db\DAORegistry;
+use PKP\doi\exceptions\DoiCreationException;
+use PKP\galley\Galley;
 use PKP\services\PKPSchemaService;
 use PKP\submission\Representation;
 
@@ -32,71 +34,111 @@ class Repository extends \PKP\doi\Repository
 {
     public const TYPE_ISSUE = 'issue';
 
-    public const LEGACY_CUSTOM_ISSUE_PATTERN = 'doiIssueSuffixPattern';
+    public const CUSTOM_ISSUE_PATTERN = 'doiIssueSuffixPattern';
 
     public function __construct(DAO $dao, Request $request, PKPSchemaService $schemaService)
     {
         parent::__construct($dao, $request, $schemaService);
     }
 
-
     /**
      * Create a DOI for the given publication.
+     *
+     * @throws DoiCreationException
      */
-    public function mintPublicationDoi(Publication $publication, Submission $submission, Context $context): ?int
+    public function mintPublicationDoi(Publication $publication, Submission $submission, Context $context): int
     {
-        assert(!is_null($submission));
+        // Default suffix does not rely on any other metadata
+        if ($context->getData(Context::SETTING_DOI_SUFFIX_TYPE) === Repo::doi()::SUFFIX_DEFAULT) {
+            return $this->mintAndStoreDoi($context, $this->generateDefaultSuffix());
+        }
 
+        // If not using default suffix, additional checks are required
         $issueId = $publication->getData('issueId');
         if ($issueId === null) {
-            return null;
+            throw new DoiCreationException(
+                $submission->getCurrentPublication()->getLocalizedFullTitle(),
+                $publication->getLocalizedFullTitle(),
+                DoiCreationException::PUBLICATION_MISSING_ISSUE
+            );
         }
 
         $issue = Repo::issue()->get($publication->getData('issueId'));
         if ($issue === null) {
-            return null;
+            throw new DoiCreationException(
+                $submission->getCurrentPublication()->getLocalizedFullTitle(),
+                $publication->getLocalizedFullTitle(),
+                DoiCreationException::PUBLICATION_MISSING_ISSUE
+            );
         } elseif ($issue && $context->getId() != $issue->getJournalId()) {
-            return null;
+            throw new DoiCreationException(
+                $submission->getCurrentPublication()->getLocalizedFullTitle(),
+                $publication->getLocalizedFullTitle(),
+                DoiCreationException::PUBLICATION_MISSING_ISSUE
+            );
         }
 
-        $doiSuffix = $this->generateSuffixPattern($publication, $context, $context->getData(Context::SETTING_CUSTOM_DOI_SUFFIX_TYPE), $issue, $submission);
+        $doiSuffix = $this->generateSuffixPattern($publication, $context, $context->getData(Context::SETTING_DOI_SUFFIX_TYPE), $issue, $submission);
 
         return $this->mintAndStoreDoi($context, $doiSuffix);
     }
 
     /**
      * Create a DOI for the given galley
+     *
+     * @throws DoiCreationException
      */
-    public function mintGalleyDoi(ArticleGalley $galley, Publication $publication, Submission $submission, Context $context): ?int
+    public function mintGalleyDoi(Galley $galley, Publication $publication, Submission $submission, Context $context): int
     {
-        assert(!is_null($submission));
+        // Default suffix does not rely on any other metadata
+        if ($context->getData(Context::SETTING_DOI_SUFFIX_TYPE) === Repo::doi()::SUFFIX_DEFAULT) {
+            return $this->mintAndStoreDoi($context, $this->generateDefaultSuffix());
+        }
+
+        // If not using default suffix, additional checks are required
         $issue = Repo::issue()->getBySubmissionId($submission->getId());
 
         if ($issue === null) {
-            return null;
+            throw new DoiCreationException(
+                $submission->getCurrentPublication()->getLocalizedFullTitle(),
+                $galley->getLabel(),
+                DoiCreationException::REPRESENTATION_MISSING_ISSUE
+            );
         } elseif ($issue && $context->getId() != $issue->getJournalId()) {
-            return null;
+            throw new DoiCreationException(
+                $submission->getCurrentPublication()->getLocalizedFullTitle(),
+                $galley->getLabel(),
+                DoiCreationException::REPRESENTATION_MISSING_ISSUE
+            );
         }
 
-        $doiSuffix = $this->generateSuffixPattern($publication, $context, $context->getData(Context::SETTING_CUSTOM_DOI_SUFFIX_TYPE), $issue, $submission, $galley);
+        $doiSuffix = $this->generateSuffixPattern($galley, $context, $context->getData(Context::SETTING_DOI_SUFFIX_TYPE), $issue, $submission, $galley);
 
         return $this->mintAndStoreDoi($context, $doiSuffix);
     }
 
     /**
      * Create a DOI for the given Issue
+     *
+     * @throws DoiCreationException
      */
-    public function mintIssueDoi(Issue $issue): ?int
+    public function mintIssueDoi(Issue $issue, Context $context): int
     {
-        /** @var JournalDAO $contextDao */
-        $contextDao = \DAORegistry::getDAO('JournalDAO');
-        $context = $contextDao->getById($issue->getData('journalId'));
-
         if ($context->getId() != $issue->getJournalId()) {
-            return null;
+            throw new DoiCreationException(
+                $issue->getLocalizedTitle(),
+                $issue->getLocalizedTitle(),
+                DoiCreationException::INCORRECT_ISSUE_CONTEXT
+            );
         }
 
-        $doiSuffix = $this->generateSuffixPattern($issue, $context, $context->getData(Context::SETTING_CUSTOM_DOI_SUFFIX_TYPE), $issue);
+        // Default suffix does not rely on any other metadata
+        if ($context->getData(Context::SETTING_DOI_SUFFIX_TYPE) === Repo::doi()::SUFFIX_DEFAULT) {
+            return $this->mintAndStoreDoi($context, $this->generateDefaultSuffix());
+        }
+
+        // If not using default suffix, use pattern generator
+        $doiSuffix = $this->generateSuffixPattern($issue, $context, $context->getData(Context::SETTING_DOI_SUFFIX_TYPE), $issue);
 
         return $this->mintAndStoreDoi($context, $doiSuffix);
     }
@@ -127,14 +169,11 @@ class Repository extends \PKP\doi\Repository
     ): string {
         $doiSuffix = '';
         switch ($patternType) {
-            case self::SUFFIX_DEFAULT_PATTERN:
-                $doiSuffix = PubIdPlugin::generateDefaultPattern($context, $issue, $submission, $representation);
-                break;
             case self::SUFFIX_CUSTOM_PATTERN:
                 $pubIdSuffixPattern = $this->getPubIdSuffixPattern($object, $context);
                 $doiSuffix = PubIdPlugin::generateCustomPattern($context, $pubIdSuffixPattern, $object, $issue, $submission, $representation);
                 break;
-            case self::CUSTOM_SUFFIX_MANUAL:
+            case self::SUFFIX_MANUAL:
                 break;
         }
 
@@ -159,7 +198,8 @@ class Repository extends \PKP\doi\Repository
 
 
         /** @var JournalDAO $contextDao */
-        $contextDao = \DAORegistry::getDAO('JournalDAO');
+        $contextDao = DAORegistry::getDAO('JournalDAO');
+        /** @var Journal $context */
         $context = $contextDao->getById($submission->getData('contextId'));
 
         foreach ($publications as $publication) {
@@ -169,8 +209,12 @@ class Repository extends \PKP\doi\Repository
             }
 
             // Galleys
-            /** @var ArticleGalley[] $galleys */
-            $galleys = Services::get('galley')->getMany(['publicationIds' => $publication->getId()]);
+            $galleys = Repo::galley()->getMany(
+                Repo::galley()
+                    ->getCollector()
+                    ->filterByPublicationIds(['publicationIds' => $publication->getId()])
+            );
+
             foreach ($galleys as $galley) {
                 $galleyDoiId = $galley->getData('doiId');
                 if (!empty($galleyDoiId) && $context->isDoiTypeEnabled(self::TYPE_REPRESENTATION)) {
@@ -198,7 +242,8 @@ class Repository extends \PKP\doi\Repository
         $issueDoiId = $issue->getData('doiId');
 
         /** @var JournalDAO $contextDao */
-        $contextDao = \DAORegistry::getDAO('JournalDAO');
+        $contextDao = DAORegistry::getDAO('JournalDAO');
+        /** @var Journal $context */
         $context = $contextDao->getById($issue->getData('journalId'));
 
         if (!empty($issueDoiId)) {
@@ -219,7 +264,7 @@ class Repository extends \PKP\doi\Repository
     public function depositAll(Context $context)
     {
         parent::depositAll($context);
-        if (in_array(Repo::doi()::TYPE_ISSUE, $context->getData(Context::SETTING_ENABLED_DOI_TYPES))) {
+        if (in_array(Repo::doi()::TYPE_ISSUE, $context->getData(Context::SETTING_ENABLED_DOI_TYPES) ?? [])) {
             // If there is no configured registration agency, nothing can be deposited.
             $agency = $context->getConfiguredDoiAgency();
             if (!$agency) {
@@ -263,11 +308,11 @@ class Repository extends \PKP\doi\Repository
     private function getPubIdSuffixPattern(DataObject $object, Context $context)
     {
         if ($object instanceof Issue) {
-            return $context->getData(Repo::doi()::LEGACY_CUSTOM_ISSUE_PATTERN);
+            return $context->getData(Repo::doi()::CUSTOM_ISSUE_PATTERN);
         } elseif ($object instanceof Representation) {
-            return $context->getData(Repo::doi()::LEGACY_CUSTOM_REPRESENTATION_PATTERN);
+            return $context->getData(Repo::doi()::CUSTOM_REPRESENTATION_PATTERN);
         } else {
-            return $context->getData(Repo::doi()::LEGACY_CUSTOM_PUBLICATION_PATTERN);
+            return $context->getData(Repo::doi()::CUSTOM_PUBLICATION_PATTERN);
         }
     }
 }

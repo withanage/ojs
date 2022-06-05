@@ -17,6 +17,7 @@
 use APP\facades\Repo;
 use PKP\context\Context;
 use PKP\core\APIResponse;
+use PKP\doi\exceptions\DoiCreationException;
 use PKP\security\Role;
 
 use Slim\Http\Request as SlimRequest;
@@ -37,22 +38,22 @@ class DoiHandler extends PKPDoiHandler
                 [
                     'pattern' => $this->getEndpointPattern() . '/issues/export',
                     'handler' => [$this, 'exportIssues'],
-                    'roles' => [Role::ROLE_ID_MANAGER],
+                    'roles' => [Role::ROLE_ID_MANAGER, Role::ROLE_ID_SITE_ADMIN],
                 ],
                 [
                     'pattern' => $this->getEndpointPattern() . '/issues/deposit',
                     'handler' => [$this, 'depositIssues'],
-                    'roles' => [Role::ROLE_ID_MANAGER],
+                    'roles' => [Role::ROLE_ID_MANAGER, Role::ROLE_ID_SITE_ADMIN],
                 ],
                 [
                     'pattern' => $this->getEndpointPattern() . '/issues/markRegistered',
                     'handler' => [$this, 'markIssuesRegistered'],
-                    'roles' => [Role::ROLE_ID_MANAGER],
+                    'roles' => [Role::ROLE_ID_MANAGER, Role::ROLE_ID_SITE_ADMIN],
                 ],
                 [
                     'pattern' => $this->getEndpointPattern() . '/issues/assignDois',
                     'handler' => [$this, 'assignIssueDois'],
-                    'roles' => [Role::ROLE_ID_MANAGER]
+                    'roles' => [Role::ROLE_ID_MANAGER, Role::ROLE_ID_SITE_ADMIN]
                 ]
             ]
         ]);
@@ -207,14 +208,37 @@ class DoiHandler extends PKPDoiHandler
             return $response->withStatus(404)->withJsonError('api.issue.404.issuesNotFound');
         }
 
+        $context = $this->getRequest()->getContext();
+        $doiPrefix = $context->getData(Context::SETTING_DOI_PREFIX);
+        if (empty($doiPrefix)) {
+            return $response->withStatus(400)->withJsonError('api.dois.400.prefixRequired');
+        }
+
+        $failedDoiCreations = [];
+
         // Assign DOIs
         foreach ($ids as $id) {
             $issue = Repo::issue()->get($id);
             if ($issue !== null) {
-                Repo::issue()->createDoi($issue);
+                $creationFailureResults = Repo::issue()->createDoi($issue);
+                $failedDoiCreations = array_merge($failedDoiCreations, $creationFailureResults);
             }
         }
 
-        return $response->withStatus(200);
+        if (!empty($failedDoiCreations)) {
+            return $response->withJson(
+                [
+                    'failedDoiCreations' => array_map(
+                        function (DoiCreationException $item) {
+                            return $item->getMessage();
+                        },
+                        $failedDoiCreations
+                    )
+                ],
+                400
+            );
+        }
+
+        return $response->withJson(['failedDoiCreations' => $failedDoiCreations], 200);
     }
 }

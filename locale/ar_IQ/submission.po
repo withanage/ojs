@@ -1,9 +1,10 @@
+# M. Ali <vorteem@gmail.com>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-19T10:49:16+00:00\n"
-"PO-Revision-Date: 2021-01-16 10:53+0000\n"
+"PO-Revision-Date: 2022-04-29 09:26+0000\n"
 "Last-Translator: M. Ali <vorteem@gmail.com>\n"
 "Language-Team: Arabic <http://translate.pkp.sfu.ca/projects/ojs/submission/"
 "ar_IQ/>\n"
@@ -16,7 +17,7 @@ msgstr ""
 "X-Generator: Weblate 3.9.1\n"
 
 msgid "submission.submit.title"
-msgstr "قدم طلباً للنشر"
+msgstr "تقديم مقالة"
 
 msgid "submission.submit.userGroup"
 msgstr "قدم طلباً بصفتي..."
@@ -25,7 +26,7 @@ msgid "submission.submit.userGroupDescription"
 msgstr "إختر الصفة التي تقدم بها طلبك هذا."
 
 msgid "submission.upload.selectComponent"
-msgstr "إختر مكون المؤلَّف..."
+msgstr "إختر مُكون المؤلَّف..."
 
 msgid "submission.title"
 msgstr "عنوان المؤلَّف"
@@ -318,3 +319,35 @@ msgid "publication.assignedToIssue"
 msgstr ""
 "لقد تم تخصيصه للنشر في <a href=\"{$issueUrl}\">{$issueName}</a> ولكن لم تتم "
 "جدولته للنشر بعد."
+
+msgid "editor.submission.decision.promoteFiles.externalReview"
+msgstr "إختر الملفات التي ينبغي إرسالها إلى مرحلة التحكيم."
+
+msgid "editor.submission.decision.sendExternalReview.notifyAuthorsDescription"
+msgstr ""
+"إرسال بريد الكتروني إلى المؤلفين لإبلاغهم بأن طلب التقديم هذا سيتم إرساله "
+"إلى التحكيم المناظر. إن كان بالإمكان، أعط المؤلفين فكرة عن الفترة الزمنية "
+"التي قد تستغرقها عملية التحكيم المناظر ومتى عليهم أن يتوقعوا تواصل المحرر "
+"معهم مرة أخرى."
+
+msgid "editor.submission.decision.backToReview.notifyAuthorsDescription"
+msgstr ""
+"إرسال بريد الكتروني إلى المؤلفين لإبلاغهم بأن طلب تقديمهم تجري إعادته إلى "
+"مرحلة التحكيم. أعطِ تبريرًا لاتخاذ هذا القرار وأوضح للمؤلف ماهية التحكيم "
+"الإضافي الذي سيتم إجراؤه."
+
+msgid "editor.submission.decision.backToReview.completed.description"
+msgstr "طلب التقديم، {$title}، تمت إعادته إلى مرحلة التحكيم."
+
+msgid "editor.submission.decision.backToReview.completed"
+msgstr "إعادة إلى التحكيم"
+
+msgid "editor.submission.decision.backToReview.log"
+msgstr ""
+"{$editorName} تراجع عن قرار قبول طلب التقديم هذا وأعاده إلى مرحلة التحكيم."
+
+msgid "editor.submission.decision.backToReview.description"
+msgstr "التراجع عن قرار قبول طلب التقديم هذا بإرساله إلى مرحلة التحكيم."
+
+msgid "editor.submission.decision.backToReview"
+msgstr "عودة إلى التحكيم"

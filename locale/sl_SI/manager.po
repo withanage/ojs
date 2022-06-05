@@ -1,10 +1,10 @@
-# Primož Svetek <primoz.svetek@gmail.com>, 2021.
+# Primož Svetek <primoz.svetek@gmail.com>, 2021, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-19T10:49:32+00:00\n"
-"PO-Revision-Date: 2021-11-19 19:11+0000\n"
+"PO-Revision-Date: 2022-05-05 13:31+0000\n"
 "Last-Translator: Primož Svetek <primoz.svetek@gmail.com>\n"
 "Language-Team: Slovenian <http://translate.pkp.sfu.ca/projects/ojs/manager/"
 "sl_SI/>\n"
@@ -1983,17 +1983,12 @@ msgstr "DOI"
 msgid "doi.manager.settings.description"
 msgstr "Za upravljanje in uporabo DOI-jev prosimo nastavite DOI vtičnik:"
 
-msgid "doi.manager.settings.doiObjects"
-msgstr "Vsebina revije"
-
+#, fuzzy
 msgid "doi.manager.settings.doiObjectsRequired"
 msgstr "Prosimo izberite objekte, ki se jim bodo dodelili DOI-ji."
 
 msgid "doi.manager.settings.explainDois"
 msgstr "Prosimo izberite objekte, ki se jim bodo dodelili DOI-ji:"
-
-msgid "doi.manager.settings.enableIssueDoi"
-msgstr "Številke"
 
 msgid "doi.manager.settings.enableSubmissionDoi"
 msgstr "Prispevki"
@@ -2004,17 +1999,8 @@ msgstr "Prelomi"
 msgid "doi.manager.settings.doiPrefix"
 msgstr "DOI predpona"
 
-msgid "doi.manager.settings.doiPrefix.description"
-msgstr "DOI predpono dodeli registracijska agencija (npr. <a href=\"http://www.crossref.org\" target=\"_new\">Crossref</a>) in je oblike 10.xxxx (npr. 10.1234):"
-
 msgid "doi.manager.settings.doiPrefixPattern"
 msgstr "DOI predpona je obvezna in mora biti oblike 10.xxxx."
-
-msgid "doi.manager.settings.doiSuffix"
-msgstr "DOI pripona"
-
-msgid "doi.manager.settings.doiSuffix.description"
-msgstr "DOI pripona je poljubne oblike, pomembno je, da je unikatna med vsemi objavljenimi objekti, ki so bili izdani znotraj ene DOI predpone:"
 
 msgid "doi.manager.settings.doiSuffixPattern"
 msgstr "Uporabi vpisani vzorec spodaj za kreiranje DOI pripone. Uporabite %j za inicilake  revije, %v za številko zvezka, %i za številko revije, %Y za leto, %a za OJS ID prispevka, %g za OJS ID preloma, %f za OJS ID datoteke, %p za številko strani in %x za \"Identifikator po meri\"."
@@ -2030,15 +2016,6 @@ msgstr "za prispevke"
 
 msgid "doi.manager.settings.doiSuffixPattern.representations"
 msgstr "za prelome"
-
-msgid "doi.manager.settings.doiSuffixDefault"
-msgstr "Uporabi privzet vzorec."
-
-msgid "doi.manager.settings.doiSuffixDefault.description"
-msgstr "%j.v%vi%i za številke<br />%j.v%vi%i.%a za prispevke<br />%j.v%vi%i.%a.g%g za prelome."
-
-msgid "doi.manager.settings.doiSuffixCustomIdentifier"
-msgstr "Za vsak izdan objekt vnesite svojo DOI priponko. Pri metapodatkih vsakega objekta boste našli DOI vnosno polje."
 
 msgid "doi.manager.settings.doiIssueSuffixPatternRequired"
 msgstr "Prosimo vnesite vzorec za DOI pripono za številke."
@@ -2119,7 +2096,9 @@ msgid "doi.editor.assignDoi.pattern"
 msgstr "DOI {$pubId} ne more biti dodeljen, ker vsebuje vzorec, ki ga ni mogoče razrešiti."
 
 msgid "doi.editor.assignDoi.assigned"
-msgstr "DOI {$pubId} je bil dodeljen."
+msgstr ""
+"DOI {$pubId} je bil dodeljen. Za spreminjanje DOI-ja obiščite stran  <a href="
+"\"{$doiManagementLink}\">Upravljanje z DOI</a>."
 
 msgid "doi.editor.missingParts"
 msgstr ""
@@ -2153,3 +2132,67 @@ msgstr "DOI za ta članek bo {$doi}."
 
 msgid "doi.editor.missingPrefix"
 msgstr "DOI se mora začeti z {$doiPrefix}."
+
+msgid "doi.manager.displayName"
+msgstr "DOI-ji"
+
+msgid "emailTemplate.variable.queuedPayment.itemCurrencyCode"
+msgstr "Valuta zneska plačila, kot je EUR"
+
+msgid "doi.manager.issueDois"
+msgstr "DOI številke"
+
+msgid "doi.manager.submissionDois"
+msgstr "DOI prispevka"
+
+msgid "api.issue.404.issuesNotFound"
+msgstr "Zahtevane številke ni bilo mogoče najti"
+
+msgid "api.issue.403.canEditPublishedDoi"
+msgstr "Po izdaji revije je možno spreminjati le DOI-je"
+
+msgid "api.galley.403.canEditPublishedDoi"
+msgstr "Po izdaji revije/preloma je možno spreminjati le DOI-je"
+
+msgid "api.issue.400.invalidDoi"
+msgstr "Podani DOI ni veljaven"
+
+msgid "api.galley.403.publicationDidNotMatch"
+msgstr "Zahtevani prelom ni del te izdaje."
+
+msgid "doi.editor.assignDoi.toBeAssigned"
+msgstr "DOI, ki bo dodeljen ob izdaji: {$pubId}."
+
+msgid "doi.manager.settings.registrationAgency.description"
+msgstr ""
+"Prosimo izberite registracijsko agencijo, pri kateri želite deponirati DOI-"
+"je."
+
+msgid "doi.manager.settings.registrationAgency"
+msgstr "Registracijska agencija"
+
+msgid "doi.manager.settings.registrationAgency.none"
+msgstr "Ne obstaja"
+
+msgid "emailTemplate.variable.queuedPayment.itemCost"
+msgstr "Znesek plačila"
+
+msgid "emailTemplate.variable.queuedPayment.itemName"
+msgstr "Ime tipa plačila"
+
+msgid "doi.manager.settings.doiCreationTime.copyedit"
+msgstr "V fazi lektoriranja"
+
+msgid "doi.manager.settings.doiSuffixLegacy"
+msgstr ""
+"Uporabi privzeti vzorec.<br />%j.v%vi%i za številke<br />%j.v%vi%i.%a za "
+"članke<br />%j.v%vi%i.%a.g%g za prelome."
+
+msgid "manager.setup.enableDois.description"
+msgstr "Dodeli DOI-je člankom, številkam in prelomom."
+
+msgid "mailable.decision.initialDecline.notifyAuthor.description"
+msgstr ""
+"Email za obvestilo avtorjem, da je bil njihov prispevek zavrnjen še pred "
+"pričetkom recenzije, ker prispevek na zadostuje zahtevam za objavo v tej "
+"reviji."
