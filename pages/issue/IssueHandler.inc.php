@@ -82,6 +82,7 @@ class IssueHandler extends Handler {
 		// consider public identifiers
 		$pubIdPlugins = PluginRegistry::loadCategory('pubIds', true);
 		$templateMgr->assign('pubIdPlugins', $pubIdPlugins);
+		HookRegistry::call('IssueHandler::view::toc', array($request));
 		$templateMgr->display('frontend/pages/issue.tpl');
 	}
 
@@ -107,6 +108,7 @@ class IssueHandler extends Handler {
 			// consider public identifiers
 			$pubIdPlugins = PluginRegistry::loadCategory('pubIds', true);
 			$templateMgr->assign('pubIdPlugins', $pubIdPlugins);
+			HookRegistry::call('IssueHandler::view::toc', array($request));
 			$templateMgr->display('frontend/pages/issue.tpl');
 		}
 	}
