@@ -77,8 +77,7 @@
 				</div>
 			{/if}
 		{/foreach}
-		{*  TODO: iterate this as an array*}
-        {$metadataView}
+		{$metadataView}
 		{* Published date *}
 		{if $issue->getDatePublished()}
 			<div class="published">
