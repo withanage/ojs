@@ -1,0 +1,147 @@
+name: integration-test
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - main
+  schedule:
+    - cron: '0 1 1 * *'
+
+jobs:
+  install:
+    name: ${{matrix.pkp-application}}(BRANCH=${{matrix.pkp-branch}} ;PHP=${{matrix.php-versions}}; DB=${{matrix.dbs}})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php-versions: ['8.1','8.2']
+        dbs: ['pgsql', 'mysql']
+        pkp-application: ['ojs']
+        pkp-branch: ['${{ github.head_ref || github.ref_name }}']
+    env:
+      DBTYPE: ${{matrix.dbs  == 'pgsql' && 'PostgreSQL' || 'MySQLi'}}
+      DBUSERNAME: ojs-ci
+      DBPASSWORD: ojs-ci
+      DBNAME: ojs-ci
+      DBHOST: 127.0.0.1
+      FILESDIR: files
+      APPLICATION: ojs
+      TEST: ${{matrix.dbs}}
+    steps:
+
+      - name: Install postgres
+        if: ${{matrix.dbs == 'pgsql'}}
+        run: |
+          sudo apt install postgresql postgresql-contrib
+          sudo dpkg-reconfigure locales
+          sudo sed -i 's\peer\trust\g' /etc/postgresql/14/main/pg_hba.conf
+
+      - name: Install mysql
+        if: ${{matrix.dbs == 'mysql'}}
+        run: |
+          sudo apt install -q -y mysql-server mysql-client
+          sudo service mysql start
+
+      - name: Install PKP Application
+        run: |
+          git clone -b ${{matrix.pkp-branch}} https://github.com/${{github.repository}} ~/${{matrix.pkp-application}}
+          cd ~/${{matrix.pkp-application}}
+          git submodule update --init --recursive
+      - name:  Create config.inc.php and modify settings
+        run: |
+          cd ~/${{matrix.pkp-application}}
+          cp config.TEMPLATE.inc.php config.inc.php
+          sed -i -e "s/enable_cdn = On/enable_cdn = Off/" config.inc.php
+          mkdir --parents files
+
+      - name: "Validate and lint"
+        run: |
+          cd ~/${{matrix.pkp-application}} && npm install
+          ./lib/pkp/tools/travis/install-linter.sh
+          ./lib/pkp/tools/travis/validate-xml.sh
+          ./lib/pkp/tools/buildjs.sh -n
+          ./lib/pkp/tools/checkHelp.sh
+          ./lib/pkp/tools/travis/validate-json.sh
+          npm run lint
+      - name: Setup PHP, extensions and composer
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{matrix.php-versions}}
+          extensions: bcmath, bz2, common, cli, curl, fpm, gd, intl, mbstring, mysql,mysqlnd, mysqli, opcache, pdo_mysql,  pgsql, json,soap, xml, zip
+          coverage: xdebug
+        env:
+          update: true
+
+
+      - name: Install Composer Dependencies
+        run: |
+          cd ~/${{matrix.pkp-application}}
+          lib/pkp/tools/travis/install-composer-dependencies.sh
+          npm i g -npm && npm i @vue/cli-service && npm i cypress && npm install && npm run build
+
+
+      - name: upgrade
+        env:
+         DATASET_BRANCH: stable-3_3_0
+         TEST: mysql
+        run: |
+          cd ~/${{matrix.pkp-application}}
+          source ./lib/pkp/tools/travis/prepare-tests.sh
+          git clone https://github.com/pkp/datasets
+          cp -r datasets/${APPLICATION}/${DATASET_BRANCH}/${TEST}/files/* files/
+          cp -r datasets/${APPLICATION}/${DATASET_BRANCH}/${TEST}/public/* public/
+          cp datasets/${APPLICATION}/${DATASET_BRANCH}/${TEST}/config.inc.php .
+          ./datasets/tools/dbclient.sh < datasets/${APPLICATION}/${DATASET_BRANCH}/${TEST}/database.sql
+          php tools/upgrade.php check
+          php tools/upgrade.php upgrade
+
+
+      - name: Prepare tests
+        run: |
+          cd ~/${{matrix.pkp-application}}
+          ./lib/pkp/tools/travis/prepare-tests.sh
+
+      - name: Run Server
+        run: |
+          cd ~/${{matrix.pkp-application}}
+          php -S 127.0.0.1:8000 -t . >& access.log &
+
+      - name: Cypress application setup (${{matrix.dbs}})
+        run: |
+          export CYPRESS_BASE_URL=http://127.0.0.1:8000
+          export CYPRESS_DBTYPE=${{matrix.dbs  == 'pgsql' && 'PostgreSQL' || 'MySQLi'}}
+          export CYPRESS_DBNAME=ojs-ci
+          export CYPRESS_DBUSERNAME=ojs-ci
+          export CYPRESS_DBPASSWORD=ojs-ci
+          export CYPRESS_DBHOST=127.0.0.1
+          export CYPRESS_FILESDIR=files
+          cd ~/${{matrix.pkp-application}}
+          npx cypress run --spec "cypress/tests/data/10-ApplicationSetup"
+      #      - name: Cypress content setup (${{matrix.dbs}})
+      #        run: |
+      #          cd ~/${{matrix.pkp-application}}
+      #          npx cypress run --spec "cypress/tests/data/60-content"
+      #
+      #      - name: Grab a ready dataset
+      #        run: |
+      #          cd ~/${{matrix.pkp-application}}
+      #          git clone -b main https://github.com/pkp/datasets ~/datasets
+
+      - name: Run unit tests
+        run: |
+          cd ~/${{matrix.pkp-application}}
+          ./lib/pkp/tools/runAllTests.sh -CcPpdR
+
+      - name: Show failures log
+        if: ${{ failure() }}
+        run: |
+          cd ~/${{ matrix.pkp-application }}
+          cat access.log
+
+      - name: Cypress integration tests (${{matrix.dbs}})
+        run: |
+          cd ~/${{matrix.pkp-application}}
+          npx cypress run --spec "lib/pkp/cypress/tests/integration"
+
