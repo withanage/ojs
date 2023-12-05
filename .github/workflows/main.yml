@@ -32,7 +32,7 @@ jobs:
     steps:
         - uses: actions/checkout@v4
 
-        - uses: xmlFlow/test-action@v1
+        - uses: withanage/test-action@v1
           with:
             pkp-application: 'ojs'
             pkp-repository: 'pkp'
