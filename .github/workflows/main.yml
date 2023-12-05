@@ -1,0 +1,39 @@
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: (PHP=${{matrix.php-versions}}; DB=${{matrix.dbs}})
+    strategy:
+      fail-fast: false
+      matrix:
+        php-versions: [ '8.1','8.2' ]
+        dbs: [ 'pgsql', 'mysql','mariadb']
+    env:
+      BASEURL: http://localhost
+      DBHOST: 127.0.0.1
+      DBTYPE: ${{matrix.dbs == 'pgsql' && 'PostgreSQL' || 'MySQLi'}}
+      DBNAME: ojs-ci
+      DBUSERNAME: ojs-ci
+      DBPASSWORD: ojs-ci
+      CYPRESS_BASE_URL: http://127.0.0.1:8000
+      CYPRESS_DBNAME: ojs-ci
+      CYPRESS_DBUSERNAME: ojs-ci
+      CYPRESS_DBPASSWORD: ojs-ci
+      CYPRESS_DBHOST: 127.0.0.1
+      CYPRESS_FILESDIR: files
+      CYPRESS_DBTYPE: ${{matrix.dbs=='pgsql' && 'PostgreSQL' || 'MySQLi'}}
+      FILESDIR: files
+      DATABASEDUMP: database.sql.gz
+      FILESDUMP: files.tar.gz
+      TEST: ${{matrix.dbs}}
+      APPLICATION: ojs
+
+    steps:
+        - uses: actions/checkout@v4
+
+        - uses: xmlFlow/test-action@v1
+          with:
+            pkp-application: 'ojs'
+            pkp-repository: 'pkp'
+            pkp-branch: 'main'
