@@ -1,5 +1,5 @@
 on: [push,pull_request]
-name: '${GITHUB_REPOSITORY}'
+name: ${GITHUB_REPOSITORY}
 jobs:
   validate:
     name: validate
