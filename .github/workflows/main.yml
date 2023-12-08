@@ -1,5 +1,5 @@
 on: [push,pull_request]
-name: ${GITHUB_REPOSITORY}
+name: ojs
 jobs:
   validate:
     name: validate
