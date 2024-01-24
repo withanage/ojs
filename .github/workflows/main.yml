@@ -15,7 +15,8 @@ jobs:
     steps:
       - uses: xmlFlow/pkp-github-actions@v1
         with:
-          validate: true
+          #validate: true
+          test: true
           upgrade: true
 
 
