@@ -17,9 +17,9 @@ jobs:
         with:
           #validate: true
           test: true
-          application: ${{matrix.application}}
-          repository: 'pkp'
-          branch: 'main'
+          #application: ${{matrix.application}}
+          #repository: 'pkp'
+          #branch: 'main'
 
           #upgrade: true
 
