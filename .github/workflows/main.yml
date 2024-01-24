@@ -9,7 +9,7 @@ jobs:
         database: ['mysql']
         #database: ['pgsql','mysql']
         php-version: [ '8.1' ]
-        application: ['ojs','omp','ops']
+        #application: ['ojs','omp','ops']
 
     name: main
     steps:
