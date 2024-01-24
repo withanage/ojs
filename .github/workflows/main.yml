@@ -6,20 +6,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        #application: ['ojs']
         database: ['mysql']
-        php-version: [ '8.1']
-        #application: ['omp','ojs','ops']
         #database: ['pgsql','mysql']
+        php-version: [ '8.1' ]
         #php-version: [ '8.1' ,'8.2']
 
     name: ojs
     steps:
       - uses: xmlFlow/pkp-github-actions@v1
         with:
-          test: true
-          #upgrade: true
-          application: 'ojs'
-          repository: 'pkp'
-          branch: 'main'
+          upgrade: true
+
 
