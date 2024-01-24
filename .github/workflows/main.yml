@@ -1,7 +1,7 @@
 on: [push, pull_request]
 name: main
 jobs:
-  ojs:
+  main:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -11,7 +11,7 @@ jobs:
         php-version: [ '8.1' ]
         #php-version: [ '8.1' ,'8.2']
 
-    name: ojs
+    name: main
     steps:
       - uses: xmlFlow/pkp-github-actions@v1
         with:
