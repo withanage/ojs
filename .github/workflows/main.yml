@@ -1,7 +1,7 @@
 on: [push, pull_request]
 name: main
 jobs:
-  ojs:
+  main:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -9,14 +9,17 @@ jobs:
         database: ['mysql']
         #database: ['pgsql','mysql']
         php-version: [ '8.1' ]
-        #php-version: [ '8.1' ,'8.2']
+        #application: ['ojs','omp','ops']
 
-    name: ojs
+    name: main
     steps:
       - uses: xmlFlow/pkp-github-actions@v1
         with:
           #validate: true
           test: true
+          #application: ${{matrix.application}}
+          #repository: 'pkp'
+          #branch: 'main'
 
           #upgrade: true
 
