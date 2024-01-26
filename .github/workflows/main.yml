@@ -20,7 +20,7 @@ jobs:
           #repository: 'pkp'
           #branch: 'main'
 
-          #upgrade: true
+          upgrade: true
 
 
 
