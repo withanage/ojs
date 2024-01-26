@@ -16,12 +16,12 @@ jobs:
       - uses: xmlFlow/pkp-github-actions@v1
         with:
           #validate: true
-          test: true
+          #test: true
           #application: ${{matrix.application}}
           #repository: 'pkp'
           #branch: 'main'
 
-          #upgrade: true
+          upgrade: true
 
 
 
