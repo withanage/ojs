@@ -6,7 +6,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        database: ['pgsql','mysql']
+        database: ['pgsql','mysql','mariadb']
         php-version: [ '8.1' ]
         #application: ['ojs','omp','ops']
 
