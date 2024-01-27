@@ -1,0 +1,22 @@
+on: [push, pull_request]
+name: main
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        database: ['pgsql','mysql']
+        php-version: [ '8.1' ]
+        #application: ['ojs','omp','ops']
+
+    name: main
+    steps:
+      - uses: xmlFlow/pkp-github-actions@v1
+        with:
+          validate: true
+          test: true
+          upgrade: true
+
+
+
