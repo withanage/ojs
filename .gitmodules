@@ -1,7 +1,7 @@
 [submodule "lib/pkp"]
 	path = lib/pkp
 	url = https://github.com/xmlFlow/pkp-lib.git
-	branch = test-branch-0641142
+	branch = "2222"
 [submodule "plugins/generic/customBlockManager"]
 	path = plugins/generic/customBlockManager
 	url = https://github.com/pkp/customBlockManager.git
