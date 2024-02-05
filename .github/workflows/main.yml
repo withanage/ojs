@@ -1,0 +1,17 @@
+on: [push, pull_request]
+name: main
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        database: ['pgsql','mysql','mariadb']
+        php-version: [ '8.1' ,'8.2']
+
+
+    name: main
+    steps:
+      - uses: xmlFlow/pkp-github-actions@v1
+        with:
+          reset_commit: f627a8a7640c8b2f88407e21d4bbc29b9154bf2b
