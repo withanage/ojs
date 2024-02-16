@@ -1,0 +1,17 @@
+on: [push, pull_request]
+name: main
+jobs:
+  pkp-lib:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        database: ['pgsql','mysql']
+        php-version: [ '8.1','8.2']
+
+    name: main
+    steps:
+      - uses: xmlFlow/pkp-github-actions@v1
+        with:
+          node_version: 16.1.0
+
