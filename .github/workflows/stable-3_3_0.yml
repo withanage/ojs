@@ -17,4 +17,3 @@ jobs:
         with:
           node_version: 12
           upgrade_test: 'stable-3_2_0,stable-3_2_1,stable-3_3_0,stable-3_4_0'
-git
