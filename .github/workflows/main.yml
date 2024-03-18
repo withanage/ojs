@@ -1,0 +1,21 @@
+on: [push, pull_request]
+name: ojs
+jobs:
+  ojs:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: [ '8.1','8.2']
+        database: ['pgsql','mysql','mariadb']
+
+    name: ojs
+    steps:
+      - uses: xmlFlow/pkp-github-actions@v1
+        with:
+          upgrade_test: 'stable-3_3_0,stable-3_4_0'
+          node_version: 20
+          dataset_branch: 'main'
+          DATASETS_ACCESS_KEY:  ${{secrets.DATASETS_ACCESS_KEY}}
+          DEBUG_IN_TMATE: false
+
