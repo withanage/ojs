@@ -43,4 +43,4 @@ jobs:
           node_version: 16
           dataset_branch: 'stable-3_4_0'
           DATASETS_ACCESS_KEY:  ${{secrets.DATASETS_ACCESS_KEY}}
-          DEBUG_IN_TMATE:  false
+          DEBUG_IN_TMATE:  true
