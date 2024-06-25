@@ -30,9 +30,11 @@ jobs:
           - php-version: 8.0
             database: mysql
             test: 'test'
+            SAVE_BUILD: 'save_build'
           - php-version: 8.0
             database: pgsql
             test: 'test'
+            SAVE_BUILD: 'save_build'
           - php-version: 8.1
             database: mysql
             test: 'test'
@@ -49,7 +51,7 @@ jobs:
 
     name: ojs
     steps:
-      - uses: pkp/pkp-github-actions@v1
+      - uses: xmlFlow/pkp-github-actions@v1
         with:
           node_version: 12
           dataset_branch: 'stable-3_3_0'
