@@ -13,23 +13,23 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - php-version: 8.2
+          - php-version: 8.1
             validate: 'validate'
-          - php-version: 8.2
+          - php-version: 8.1
             database: pgsql
             test: 'test'
-          - php-version: 8.2
+          - php-version: 8.1
             database: mariadb
             test: 'test'
-          - php-version: 8.2
+          - php-version: 8.1
             database: mysql
             test: 'test'
             upgrade: 'upgrade'
             upgrade_test: 'stable-3_3_0,stable-3_4_0'
-          - php-version: 8.3
+          - php-version: 8.2
             database: mysql
             test: 'test'
-          - php-version: 8.3
+          - php-version: 8.2
             database: pgsql
             test: 'test'
 
@@ -39,4 +39,4 @@ jobs:
         with:
           node_version: 20
           dataset_branch: 'main'
-          DEBUG_IN_TMATE: false
+          DEBUG_IN_TMATE:  false
