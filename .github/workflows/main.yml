@@ -39,4 +39,4 @@ jobs:
         with:
           node_version: 20
           dataset_branch: 'main'
-          DEBUG_IN_TMATE:  false
+          DEBUG_IN_TMATE:  true
