@@ -1,13 +1,14 @@
 # Lucia Steele <lucia.steele@aboutscience.eu>, 2021.
 # Stefan Schneider <mail@stefan-schneider.at>, 2023.
 # Leonardo Mancini <leonardo.mancini@unito.it>, 2024.
+# Gabriele Raimondi <gabriele.raimondi5@unibo.it>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-19T10:49:26+00:00\n"
-"PO-Revision-Date: 2024-03-10 02:03+0000\n"
-"Last-Translator: Leonardo Mancini <leonardo.mancini@unito.it>\n"
+"PO-Revision-Date: 2024-08-26 13:24+0000\n"
+"Last-Translator: Gabriele Raimondi <gabriele.raimondi5@unibo.it>\n"
 "Language-Team: Italian <http://translate.pkp.sfu.ca/projects/ojs/editor/it/>"
 "\n"
 "Language: it\n"
@@ -46,9 +47,9 @@ msgstr "me"
 
 msgid "editor.publicIdentificationExists"
 msgstr ""
-"L'identificatore pubblico  '{$publicIdentifier}' già esiste per un altro "
-"oggetto (fascicoli, articolo o file). Definisci identificatori unici nella "
-"rivista."
+"L'identificatore pubblico '{$publicIdentifier}' esiste già per un altro "
+"oggetto (fascicoli, articolo, gabbia o file). Si prega di scegliere "
+"identificatori unici."
 
 msgid "editor.submissionArchive.noSubmissions"
 msgstr "Nessuna proposta nell'archivio."
@@ -177,7 +178,7 @@ msgid "editor.issues.coverPageInstructions"
 msgstr "(formati validi: .gif, .jpg, o .png )"
 
 msgid "editor.issues.uploaded"
-msgstr "File"
+msgstr "File caricato"
 
 msgid "editor.issues.remove"
 msgstr "Elimina"
@@ -207,8 +208,8 @@ msgstr ""
 
 msgid "editor.issues.invalidCoverImageFormat"
 msgstr ""
-"Formato non valido per l'immagine di copertina. I formati accettati sono  ."
-"gif, .jpg, o .png."
+"Formato non valido per l'immagine di copertina. I formati accettati sono ."
+"gif, .jpg, e .png."
 
 msgid "editor.issues.styleFile"
 msgstr "Foglio di stile"
@@ -249,7 +250,7 @@ msgstr "Copertina"
 msgid "editor.issues.confirmIssueDelete"
 msgstr ""
 "Tutti gli articoli saranno rimessi nella coda di editing e tutti i file "
-"associati saranno rimossi in maniera permanente.  Sei sicuro di voler "
+"associati saranno rimossi in maniera permanente. Sei sicuro di voler "
 "rimuovere questo fascicolo?"
 
 msgid "editor.issues.resetIssueOrder"
@@ -451,7 +452,7 @@ msgstr "Rimuovi"
 
 msgid "editor.article.remove.confirm"
 msgstr ""
-"Se sicuro di voler rimuovere l'articolo da questo fascicolo ? L'articolo "
+"Sei sicuro di voler rimuovere l'articolo da questo fascicolo? L'articolo "
 "sarà disponibile per uscire in un altro fascicolo."
 
 msgid "editor.issues.invalidAccessDate"
@@ -484,9 +485,9 @@ msgstr ""
 
 msgid "editor.publicIdentificationExistsForTheSameType"
 msgstr ""
-"L'identificativo pubblico  '{$publicIdentifier}' esiste di già per un'altro "
-"oggetto dello stesso genere. Per favore scegli un identificativo univoco per "
-"lo stesso tipo di oggetti all'interno della rivista."
+"L'identificativo pubblico '{$publicIdentifier}' è già in uso per un altro "
+"oggetto dello stesso genere. Si prega di scegliere un identificativo univoco "
+"per lo stesso tipo di oggetti all'interno della rivista."
 
 msgid "editor.article.coverImage"
 msgstr "Immagine di copertina"
