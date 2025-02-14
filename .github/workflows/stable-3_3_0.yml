@@ -51,7 +51,7 @@ jobs:
 
     name: ojs
     steps:
-      - uses: xmlFlow/pkp-github-actions@v1
+      - uses: pkp/pkp-github-actions@v1
         with:
           node_version: 12
           dataset_branch: 'stable-3_3_0'
