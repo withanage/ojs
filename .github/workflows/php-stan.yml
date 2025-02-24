@@ -22,9 +22,6 @@ jobs:
           php-version: '8.2'
           extensions: bcmath, bz2, curl, gd, intl, mbstring, mysql,mysqlnd, mysqli, opcache, pdo_mysql, pgsql, json,soap, xml, zip
 
-      - name: Install Composer dependencies
-        run: |
-          find . -maxdepth 4 -name composer.json -exec bash -c 'composer --no-ansi --working-dir="`dirname {}`" install --optimize-autoloader' ";"
 
       - name: Install PHPStan
         run: |
