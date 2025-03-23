@@ -30,7 +30,33 @@ jobs:
         run: |
           composer require --dev phpstan/phpstan
 
-      - name: Run PHPStan
+      - name: Run PHPStan on lib/pkp/classes
         run: |
-          vendor/bin/phpstan analyse /home/runner/work/ojs/ojs/lib/pkp --memory-limit=4G
+          echo "Running PHPStan on lib/pkp/classes..."
+          vendor/bin/phpstan analyse /home/runner/work/ojs/ojs/lib/pkp/classes --memory-limit=512M --level=max --exclude-path="vendor/*"
+
+      - name: Run PHPStan on lib/pkp/controllers
+        run: |
+          echo "Running PHPStan on lib/pkp/controllers..."
+          vendor/bin/phpstan analyse /home/runner/work/ojs/ojs/lib/pkp/controllers --memory-limit=512M --level=max --exclude-path="vendor/*"
+
+      - name: Run PHPStan on lib/pkp/pages
+        run: |
+          echo "Running PHPStan on lib/pkp/pages..."
+          vendor/bin/phpstan analyse /home/runner/work/ojs/ojs/lib/pkp/pages --memory-limit=512M --level=max --exclude-path="vendor/*"
+
+      - name: Run PHPStan on lib/pkp/lib
+        run: |
+          echo "Running PHPStan on lib/pkp/lib..."
+          vendor/bin/phpstan analyse /home/runner/work/ojs/ojs/lib/pkp/lib --memory-limit=512M --level=max --exclude-path="vendor/*"
+
+      - name: Run PHPStan on lib/pkp/tests
+        run: |
+          echo "Running PHPStan on lib/pkp/tests..."
+          vendor/bin/phpstan analyse /home/runner/work/ojs/ojs/lib/pkp/tests --memory-limit=512M --level=max --exclude-path="vendor/*"
+
+      - name: Run PHPStan on remaining lib/pkp directories
+        run: |
+          echo "Running PHPStan on remaining lib/pkp directories..."
+          vendor/bin/phpstan analyse /home/runner/work/ojs/ojs/lib/pkp --memory-limit=512M --level=max --exclude-path="vendor/*,/home/runner/work/ojs/ojs/lib/pkp/{classes,controllers,pages,lib,tests}"
 
