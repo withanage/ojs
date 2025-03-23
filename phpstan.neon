@@ -1,4 +1,3 @@
-# phpstan.neon
 parameters:
   level: max
   paths:
