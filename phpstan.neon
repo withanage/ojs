@@ -2,9 +2,7 @@ parameters:
   level: max
   paths:
     - lib/pkp/classes
-    - lib/pkp/controllers
-    - lib/pkp/pages
-    - lib/pkp/lib
+
   excludePaths:
     - vendor/*
     - lib/pkp/lib/vendor/*
