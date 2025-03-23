@@ -7,6 +7,7 @@ parameters:
     - lib/pkp/lib
   excludePaths:
     - vendor/*
+    - lib/pkp/lib/vendor/*
     - lib/pkp/tests/* # Exclude test files if they aren't meant to be analyzed
   scanFiles:
     - vendor/autoload.php
