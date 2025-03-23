@@ -5,11 +5,6 @@ parameters:
     - lib/pkp/controllers
     - lib/pkp/pages
     - lib/pkp/lib
-    - lib/pkp/tests
-    - plugins
-    - public
-    - classes
-    - pages
   excludePaths:
     - vendor/*
     - lib/pkp/tests/* # Exclude test files if they aren't meant to be analyzed
