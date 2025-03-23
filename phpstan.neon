@@ -10,7 +10,7 @@ parameters:
     - public
     - classes
     - pages
-  excludes_analyse:
+  excludePaths::
     - vendor/*
     - lib/pkp/tests/* # Exclude test files if they aren't meant to be analyzed
   scanFiles:
