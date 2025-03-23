@@ -1,7 +1,6 @@
 # phpstan.neon
 parameters:
   level: max
-  memory-limit: 1G
   paths:
     - lib/pkp/classes
     - lib/pkp/controllers
