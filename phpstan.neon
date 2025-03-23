@@ -1,7 +1,7 @@
 parameters:
   level: 2
   paths:
-    - lib/pkp/classes
+    - lib/pkp
 
   excludePaths:
     - vendor/*
