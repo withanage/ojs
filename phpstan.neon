@@ -2,10 +2,5 @@ parameters:
   level: 1
   paths:
     - lib/pkp/api
-
-  excludePaths:
-    - vendor/*
-    - lib/pkp/lib/vendor/*
-    - lib/pkp/tests/* # Exclude test files if they aren't meant to be analyzed
   scanFiles:
     - vendor/autoload.php
