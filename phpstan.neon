@@ -4,3 +4,6 @@ parameters:
     - lib/pkp/api
   scanFiles:
     - vendor/autoload.php
+  bootstrapFiles:
+    - lib/pkp/includes/bootstrap.php
+
