@@ -30,20 +30,7 @@ jobs:
         run: |
           composer require --dev phpstan/phpstan
 
-      - name: Run PHPStan on lib/pkp/classes
+      - name: Run PHPStan
         run: |
-          echo "Running PHPStan on lib/pkp/classes..."
-          vendor/bin/phpstan analyse /home/runner/work/ojs/ojs/lib/pkp/classes --memory-limit=2024M --level=max
-          echo "Running PHPStan on lib/pkp/controllers..."
-          echo "Running PHPStan on lib/pkp/pages..."
-          vendor/bin/phpstan analyse /home/runner/work/ojs/ojs/lib/pkp/pages --memory-limit=2024M --level=max
-          echo "Running PHPStan on lib/pkp/lib..."
-          vendor/bin/phpstan analyse /home/runner/work/ojs/ojs/lib/pkp/lib --memory-limit=2024M --level=max
-          echo "Running PHPStan on lib/pkp/tests..."
-          vendor/bin/phpstan analyse /home/runner/work/ojs/ojs/lib/pkp/tests --memory-limit=2024M --level=max
-
-      - name: Run PHPStan on remaining lib/pkp directories
-        run: |
-          echo "Running PHPStan on remaining lib/pkp directories..."
-          vendor/bin/phpstan analyse /home/runner/work/ojs/ojs/lib/pkp --memory-limit=2024M --level=max --exclude-path="vendor/*,/home/runner/work/ojs/ojs/lib/pkp/{classes,controllers,pages,lib,tests}"
-
+          echo "Running PHPStan with configuration file..."
+          vendor/bin/phpstan analyse --configuration=phpstan.neon

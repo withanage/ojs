@@ -1,0 +1,19 @@
+# phpstan.neon
+parameters:
+  level: max
+  memory-limit: 1G
+  paths:
+    - lib/pkp/classes
+    - lib/pkp/controllers
+    - lib/pkp/pages
+    - lib/pkp/lib
+    - lib/pkp/tests
+    - plugins
+    - public
+    - classes
+    - pages
+  excludes_analyse:
+    - vendor/*
+    - lib/pkp/tests/* # Exclude test files if they aren't meant to be analyzed
+  scanFiles:
+    - vendor/autoload.php
