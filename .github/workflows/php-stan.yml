@@ -33,5 +33,5 @@ jobs:
       - name: Run PHPStan
         run: |
           echo "Running PHPStan with configuration file..."
-          php -r "define('INDEX_FILE_LOCATION',' /home/runner/work/ojs/ojs/')"
+          php -r "define('INDEX_FILE_LOCATION','/home/runner/work/ojs/ojs/')"
           vendor/bin/phpstan analyse --configuration=phpstan.neon
