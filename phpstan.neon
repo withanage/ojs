@@ -4,9 +4,3 @@ parameters:
     - classes/author
   scanFiles:
     - vendor/autoload.php
-  bootstrapFiles:
-    - lib/pkp/lib/vendor/autoload.php
-    - lib/pkp/includes/functions.php
-
-
-
