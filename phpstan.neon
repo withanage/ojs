@@ -6,7 +6,7 @@ parameters:
     - vendor/autoload.php
   bootstrapFiles:
     - lib/pkp/lib/vendor/autoload.php
-    - /lib/pkp/includes/functions.php
+    - lib/pkp/includes/functions.php
 
 
 
