@@ -1,7 +1,7 @@
 parameters:
   level: 1
   paths:
-    - lib/pkp/api
+    - classes/author
   scanFiles:
     - vendor/autoload.php
   bootstrapFiles:
