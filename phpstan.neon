@@ -2,5 +2,4 @@ parameters:
   level: 1
   paths:
     - classes/author
-  scanFiles:
-    - vendor/autoload.php
+
